@@ -8,11 +8,29 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
+// Replace your current CORS middleware with this:
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'https://snazzy-sunflower-a40cb2.netlify.app'
+];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://snazzy-sunflower-a40cb2.netlify.app/'], // Add your Netlify URL
-  credentials: true
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
+
+// Handle preflight requests
+app.options('*', cors());
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI )
