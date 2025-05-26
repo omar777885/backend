@@ -10,7 +10,6 @@ const app = express();
 // Middleware
 // Replace your current CORS middleware with this:
 const allowedOrigins = [
-  'http://localhost:3000', 
   'https://snazzy-sunflower-a40cb2.netlify.app'
 ];
 
