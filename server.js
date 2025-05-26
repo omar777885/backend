@@ -9,7 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://your-netlify-app.netlify.app'], // Add your Netlify URL
+  origin: ['http://localhost:3000', 'https://snazzy-sunflower-a40cb2.netlify.app/'], // Add your Netlify URL
   credentials: true
 }));
 app.use(express.json());
