@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
+app.use(express.json());
 
 // Middleware
 // Replace your current CORS middleware with this:
