@@ -433,22 +433,29 @@ app.put('/api/appointments/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Cancel appointment
+// Cancel and DELETE appointment permanently
 app.delete('/api/appointments/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     
-    const appointment = await Appointment.findOne({ 
+    // Find and delete the appointment
+    const result = await Appointment.findOneAndDelete({ 
       _id: id, 
       userId: req.user.userId 
     });
 
-    if (!appointment) {
+    if (!result) {
       return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
     }
 
-    appointment.status = 'cancelled';
-    await appointment.save();
+    // Create a notification about the cancellation
+    const notification = new Notification({
+      userId: req.user.userId,
+      message: `تم إلغاء الموعد الخاص بتحليل ${result.testType}`,
+      type: 'appointment'
+    });
+
+    await notification.save();
 
     res.json({
       success: true,
